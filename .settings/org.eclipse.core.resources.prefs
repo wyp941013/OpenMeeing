@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//WebContent/js/jquery.nav.js=gbk
+encoding//WebContent/ueditor/jsp/Uploader.java=UTF-8
+encoding//src_user/com/wyp/mybatis/controller/FileController.java=UTF-8
+encoding//src_user/com/wyp/mybatis/controller/MeetController.java=gb2312
+encoding//src_user/com/wyp/mybatis/controller/MessageController.java=UTF-8
+encoding//src_user/com/wyp/mybatis/controller/RoomController.java=gb2312
+encoding//src_user/com/wyp/mybatis/controller/userCenterController.java=gb2312
+encoding//src_user/com/wyp/mybatis/inter/MeetingService.java=gbk
+encoding//src_user/com/wyp/mybatis/model=UTF-8
+encoding//src_user/com/wyp/mybatis/model/Advertisement.java=UTF-8
+encoding//src_user/com/wyp/mybatis/model/Meets.java=gbk
+encoding//src_user/com/wyp/mybatis/model/meetUser.java=gbk
+encoding//src_user/com/wyp/mybatis/util=UTF-8
+encoding//src_user/com/wyp/util/Uploader.java=UTF-8

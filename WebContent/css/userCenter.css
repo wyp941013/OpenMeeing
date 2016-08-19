@@ -1,0 +1,74 @@
+*{
+margin:0;
+padding:0;	
+font-size:14px;
+font-family:'ËÎÌו' serif; 	
+}
+
+body{
+height:100%;
+width:1002px;
+margin:0 auto;
+background:#ccc; 
+}
+
+#top{
+height:150px;	
+width:100%;
+}
+
+#main{
+height:700px;
+width:100%;
+background:#ccc; 	
+}
+
+#link{
+height:60px;
+width:90%;
+margin:0 auto;	
+background:white;	
+margin-bottom:30px; 
+/*  -moz-border-radius: 15px;      Gecko browsers
+    -webkit-border-radius: 15px;   Webkit browsers
+    border-radius:15px;            W3C syntax */
+}
+
+#link ul{
+list-style:none;	
+}
+
+#link ul li{
+float:left;	
+width:20%;
+height:60px;
+text-align:center;
+}
+
+#link ul li span{
+display:block;
+width:100%;
+height:100%;
+line-height:50px;
+text-align:center;
+border-style:solid;
+border-width:5px 0;
+border-color:blue;   
+}
+
+#link ul li span a{
+text-decoration:none;
+font-size:20px;
+font-family: "AvenirNextRoundedW01-Md",sans-serif;
+font-weight: normal;	
+}
+
+#link ul li span font{
+font-size:22px;
+float:right;
+}
+
+#main-content{
+height:600px;	
+width:100%;
+}

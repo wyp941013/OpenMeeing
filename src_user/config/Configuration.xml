@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE configuration   
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="User" type="com.wyp.mybatis.model.User"/>
+        <typeAlias alias="Meets" type="com.wyp.mybatis.model.Meets"/>
+        <typeAlias alias="Rooms" type="com.wyp.mybatis.model.Rooms"/>
+        <typeAlias alias="Message" type="com.wyp.mybatis.model.Message"/>
+        <typeAlias alias="meetUser" type="com.wyp.mybatis.model.meetUser"/>
+        <typeAlias alias="FileUploadBean" type="com.wyp.mybatis.model.FileUploadBean"/>
+    </typeAliases>
+ <plugins>
+        <plugin interceptor="com.wyp.mybatis.util.PagePlugin">
+            <property name="dialect" value="mysql" />
+            <property name="pageSqlId" value=".*ListPage.*" />
+        </plugin>
+    </plugins> 
+</configuration>

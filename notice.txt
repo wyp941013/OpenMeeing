@@ -1,0 +1,97 @@
+一、MyBatis接口式编程的两种实现方式：（注解或userMapper.xml文件）
+1.注解方式实现：在接口的方法上使用注解@Select("select * from user where id = #{id}")
+             在运行代码部分添加 sqlSessionFactory.getConfiguration().addMapper(IUserOperation.class);
+2.xml文件方式：在xml文件中注意<mapper namespace="com.wyp.mybatis.inter.IUserOperation"> 值一定要注意与接口包一致
+             在<select id="selectUserByID">中的id值与接口中的方法名必须保持一致！ 
+             
+二、多对一时需要在一的xml文件中配置多的那部分，同时当一个类中用到了另一个类作为成员，
+  	有两种声明方式：     
+        1.声明时需要使用<association property="user" javaType="User" resultMap="resultListUser" /> 
+！！！！（重要，自己吃了好长时间的亏）
+注意：1.要注意一对多的方向，要在【多】的那个实体中声明【一】那部分的对象（private User user;get、set方法）
+	2.要在xml文件中的【多】那个实体中包含【一】的哪部分（千万别放错了）
+		
+		2.<collection property="meet" javaType="java.util.Set" resultMap="Meet_resultMap"/>  	
+同样重要：注意：1.在使用时需要在【多】的那个实体中声明【一】的部分（private Set<Meets> meet = new HashSet<Meets>();get、set方法）
+		2.要在xml文件中的【多】那个实体中包含【一】的哪部分（千千万万别放错了！！！！！！！）
+		
+		
+三、今天将直接用mybatis与Spring mvc 的方式集成起来.主要有以下几个方面的配置
+1. web.xml 配置 spring dispatchservlet ,比如为:mvc-dispatcher
+2. mvc-dispatcher-servlet.xml 文件配置
+3. spring applicationContext.XML文件配置(与数据库相关，与mybatis sqlSessionFaction 整合，扫描所有mybatis mapper 文件等.)
+4. 编写controller 类
+5. 编写页面代码.
+
+四、spring、mybatis访问机制：
+1.进入WEB-INF/web.xml，在里面获取进入applicationContext.xml以及从
+如下代码：
+<servlet>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+ 到WEB-INF下找到对应 "servlet-name"-servlet.xml的文件，进入。
+ 2.在WEB-INF下找到的文件中
+    扫描包： <context:component-scan base-package="com.wyp.mybatis.controller" />
+    指定在controller中ModelAndView扫面的路径： 
+   <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/pages/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>   
+  3.打开controller时的路径要对应controller中注解的层次
+ 如UserController中有：
+  @RequestMapping("/article")
+  @RequestMapping("/list") 
+  所以直接访问路径是：http://localhost:8080/TestMybatis/article/list  
+  
+  
+4.mybatis的xml中的一些使用技巧
+  1.这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。比如：
+     <sql id="userColumns"> id,username,password </sql>
+          这个 SQL 片段可以被包含在其他语句中，例如：
+	<select id="selectUsers" resultType="map">
+	  select <include refid="userColumns"/>
+	  from some_table
+	  where id = #{id}
+	</select>  
+五、在jsp页面中添加样式文件问题：
+   由于mybatis的路径查找问题，不是单纯的按照目录路径来查找的，所以在页面中直接按目录访问样式表
+   是无效的，需要在application.xml文件中添加
+ <mvc:annotation-driven />
+ <mvc:resources location="/css/" mapping="/css/**" />
+   	                    
+六、表单数据提交绑定问题
+   这里遇到了两个问题
+   1、提交以后接不到数据：
+   解决方法：1.mybaits和struts有点不同 所以在前台界面的参数name值直接写字段，不用加全局对象
+   	     2.参数写在方法中，不是全局变量public ModelAndView insertMeets(Meets meets){}
+   2、时间提交报错，类型转换错误
+     直接在类中添加这个方法：	
+     @InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+	}
+     	                     
+ 七、jsp页面中时间类型比较
+ <%-- <c:set var="nowDate" value="<%=System.currentTimeMillis()%>"></c:set>
+			<c:choose>
+				<c:when test="${nowDate-item.meetProTime.time < 86400000}">
+			<td><a href="/OpenMeeting/meet/checkInfo?meetId=${item.meetId}">人选</a>&nbsp;|&nbsp;
+			<a href="/OpenMeeting/meet/meetInfo?meetId=${item.meetId}">查看</a></td>
+         		</c:when>
+			    <c:otherwise> --%>
+			<td><a href="/OpenMeeting/meet/meetInfo?meetId=${item.meetId}">查看</a></td>
+			   <%--  </c:otherwise>
+			    </c:choose> --%> 	                     

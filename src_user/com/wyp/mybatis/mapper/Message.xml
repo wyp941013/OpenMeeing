@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.MessageService">
+	<resultMap type="User" id="User_resultMap">
+		<id column="userId" property="userId" jdbcType="BIGINT" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="Meets" id="Meet_resultMap">
+		<id column="meetId" property="meetId" jdbcType="BIGINT" />
+		<result column="meetTitle" property="meetTitle" jdbcType="VARCHAR" />
+		<result column="applyUser" property="applyUser" jdbcType="VARCHAR" />
+		<result column="meetInfo" property="meetInfo" jdbcType="VARCHAR" />
+		<result column="meetTime" property="meetTime" jdbcType="DATE" />
+		<result column="meetStartTime" property="meetStartTime" jdbcType="TIME"/>
+	</resultMap>
+	<resultMap type="Message" id="Message_User_resultMap">
+		<id property="id" column="id" javaType="int" jdbcType="BIGINT" />
+		<result property="meetId" column="meetId"/>
+		<result property="manager" column="manager"/>
+		<result property="userId" column="userId"/>
+		<result property="oryes" column="oryes" />
+		<result property="isScanF" column="isScanF" />
+		<result property="isScanM" column="isScanM" />
+		<result property="proTime" column="proTime" />
+		<result property="returnTime" column="returnTime" />
+		<result property="sendInfo" column="sendInfo" />
+		<result property="getInfo" column="getInfo" />
+		 <association property="user" javaType="User" resultMap="User_resultMap">
+		 </association>
+	</resultMap>
+	<resultMap type="Message" id="Message_Meet_resultMap">
+		<id property="id" column="id" javaType="int" jdbcType="BIGINT" />
+		<result property="meetId" column="meetId"/>
+		<result property="manager" column="manager"/>
+		<result property="userId" column="userId"/>
+		<result property="oryes" column="oryes" />
+		<result property="isScanF" column="isScanF" />
+		<result property="isScanM" column="isScanM" />
+		<result property="proTime" column="proTime" />
+		<result property="returnTime" column="returnTime" />
+		<result property="sendInfo" column="sendInfo" />
+		<result property="getInfo" column="getInfo" />
+		<collection property="meet" javaType="java.util.Set" resultMap="Meet_resultMap"/>  
+	</resultMap>
+	<!-- 添加会议消息 -->
+	<insert id="sendMessages" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+		insert into message(meetId,manager,userId,proTime,sendInfo) values(#{meetId},#{manager},#{userId},#{proTime},#{sendInfo})
+	</insert>
+
+	<!-- 第一次User更新，更新isScanF、isScanM字段  -->
+	<update id="updateOne" parameterType="int">
+		update message set
+		isScanF = 1 
+		where id=#{id}
+	</update>
+	
+	<!-- 第二次用户更新，回复用户信息，更新oryes，isScanM，getInfo  -->
+	<update id="updateTwo" parameterType="Message">
+		update message set
+		oryes = #{oryes},isScanF = 1,isScanM = 0,returnTime = #{returnTime},getInfo = #{getInfo}
+		where id=#{id}
+	</update>
+	
+	<!-- 第三次Manager更新，用户点击确定回复以后，更新isScanM字段  -->
+	<update id="updateThird" parameterType="int">
+		update message set
+		isScanM = 1
+		where id=#{id}
+	</update>
+	<!-- 查找所有与对应用户相关的消息 -->
+	<select id="getMessageWithMe" resultMap="Message_Meet_resultMap">
+		select * from message,meets where userId = #{userId} and message.meetId = meets.meetId order by id desc;
+	</select>
+	<!-- 查找所有与对应会议相关的消息 -->
+	<select id="getAllMessage" resultMap="Message_User_resultMap">
+		select * from message,users where meetId = #{meetId} and message.userId = users.userId and isScanM = 0 ;
+	</select>
+</mapper>  

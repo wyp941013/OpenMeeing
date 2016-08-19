@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.UserService">
+	<!-- 查询单条数据 -->
+	<select id="selectUserByName" parameterType="String" resultType="User">
+		select * from users where 1 = 1
+		  <if test="userName != null">
+            and userName = #{userName}
+            <!--由于参数对象中此属性为空，因此在sql语句中被系统自动忽略  -->
+        </if> 
+        <!-- 测试if标签 -->
+	</select>
+	
+
+	<!-- 以下代码是查询列表，即list使用 -->
+	<resultMap type="User" id="resultListUser">
+		<id column="userId" property="userId" />
+		<result column="userName" property="userName" />
+		<result column="age" property="age" />
+		<result column="position" property="position" />
+		<result column="password" property="password" />
+		<result column="permission" property="permission" />
+		<result column="information" property="information" />
+		<result column="seqNum" property="seqNum" />
+	</resultMap>
+	
+	<!-- 查询单条数据 -->
+	<select id="selectUserById" parameterType="int" resultMap="resultListUser">
+		select * from users where userId = #{userId}
+	</select>
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="selectUsers" parameterType="string" resultMap="resultListUser">
+		select * from users where userName like #{userName}
+	</select>
+
+	<!-- 添加数据 -->
+	<!-- 首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server），
+	那么你可以设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上就OK了。  -->
+	<insert id="addUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into users(userName,age,password,position,permission,information,seqNum)
+		values(#{userName},#{age},#{password},#{position},#{permission},#{information},#{seqNum})
+	</insert>
+
+	<!-- 前台用户-更新数据 -->
+	<update id="updateUser" parameterType="User">
+		update users set
+		userName=#{userName},age=#{age},information=#{information}
+		where userId=#{userId}
+	</update>
+	
+	<!-- 后台-更新数据 -->
+	<update id="updateUserht" parameterType="User">
+		update users set
+		userName=#{userName},age=#{age},position=#{position},permission=#{permission},information=#{information}
+		where userId=#{userId}
+	</update>
+	
+	<!-- 后台-更新数据 -->
+	<update id="updatePass" parameterType="User">
+		update users set
+		password=#{password}
+		where userId=#{userId}
+	</update>
+
+	<!-- 删除数据 -->
+	<delete id="deleteUser" parameterType="int">
+		delete from users where userId=#{userId}
+	</delete>
+	
+	<!-- 分页查询测试 -->
+	<select id="selectUserssListPage" parameterType="long" resultMap="resultListUser">
+		select * from users 
+	</select>
+
+</mapper>
+

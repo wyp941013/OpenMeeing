@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.RoomsService">
+
+
+	<!-- 以下代码是查询列表，即list使用 -->
+	<resultMap type="Rooms" id="resultListRooms">
+		<id property="roomId" column="roomId" />
+		<result property="roomNumber" column="roomNumber" />
+		<result property="openTime" column="openTime" />
+		<result property="closeTime" column="closeTime" />
+		<result property="isEmpty" column="isEmpty" />
+		<result property="isOpen" column="isOpen" />
+		<result property="roomManager" column="roomManager" />
+	</resultMap>
+
+
+
+	<!-- 添加数据
+	首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server）， 那么你可以设置 useGeneratedKeys=”true”，然后再把 
+		keyProperty 设置到目标属性上就OK了。 -->
+	<insert id="addRooms" parameterType="Rooms" useGeneratedKeys="true" keyProperty="roomId">
+		insert into rooms(roomNumber,openTime,closeTime,isEmpty,isOpen,roomManager)
+		values(#{roomNumber},#{openTime},#{closeTime},#{isEmpty},#{isOpen},#{roomManager})
+	</insert>
+	<!-- 更新数据 -->
+	<update id="updateRooms" parameterType="Rooms">
+		update Meets set
+		roomNumber=#{roomNumber},openTime=#{openTime},closeTime=#{closeTime},
+		isEmpty=#{isEmpty},isOpen=#{isOpen},roomManager=#{roomManager},
+		where roomId=#{roomId}
+	</update>
+
+	<!-- 删除数据 -->
+	<delete id="deleteRooms" parameterType="long">
+		delete from rooms where roomId=#{roomId}
+	</delete> 
+
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="getRoomsInfo" parameterType="long" resultType="Rooms"> 
+		select * from rooms where roomId = #{roomId}
+  </select> 
+
+	<!-- 分页查询测试 -->
+	<select id="selectRoomsListPage" parameterType="long" resultMap="resultListRooms">
+		select Rooms.roomId,
+		Rooms.roomNumber,Rooms.openTime,Rooms.closeTime,
+		Rooms.isEmpty,Rooms.isOpen,Rooms.roomManager
+		from rooms 
+	</select>
+</mapper>
+

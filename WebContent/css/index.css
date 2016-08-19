@@ -1,0 +1,88 @@
+*{
+	margin:0;
+	padding:0;
+}
+
+#main{
+height:1560px;
+}
+
+/* 系统使用流程视频 */
+#First{
+background:red; 	
+
+}
+
+/*三张轮播简介  */
+#Second{
+height:33%;
+background:#6EC8C7; 	
+}
+
+.second_left{
+width:46%;	
+height:100%;
+margin:0 auto;
+float:left;
+color: #757575;
+}
+
+.second_left h1{
+	color: #454545;
+	font-size: 2.3em;
+	color:white;
+letter-spacing: -0.05em;
+}
+
+.second_edit_font{
+	width:90%;
+	margin:0 auto;
+	max-height:250px;
+	overflow: hidden;
+	font-size:19px;
+	color:#dd;
+	font-weight: normal;
+}
+
+.second_right{
+width:50%;	
+height:96%;
+overflow:hidden; 
+margin-left:1%;
+float:left;
+}
+
+/*  */
+#Third{
+background:#ee1;  
+width:100%;
+padding:0 10px;
+overflow:hidden;
+}
+
+
+.div{
+float:left; 
+position:relative; 
+width:33.34%;
+}
+
+.mid_div{
+height:auto !important;
+/* min-height:400px; */
+font-family:"宋体" serif; 
+}
+
+.nav-justified {
+    width: 60%;
+    margin: 0 5% 0 0;
+    float: right;
+}
+
+/*系统链接及地址  */
+#footer{
+margin-bottom:10px;
+padding-bottom:20px;
+background:#bcd; 	
+}
+

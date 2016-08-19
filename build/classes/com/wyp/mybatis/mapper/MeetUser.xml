@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.MeetUserService">
+
+	<resultMap type="User" id="resultUser">
+			<id column="userId" property="userId" jdbcType="BIGINT" />
+			<result column="userName" property="userName" jdbcType="VARCHAR" />
+			<result column="position" property="position" jdbcType="VARCHAR" />
+			<result column="age" property="age" jdbcType="SMALLINT" />
+			<result column="password" property="password" jdbcType="VARCHAR" />
+			<result column="permission" property="permission" jdbcType="SMALLINT" />
+			<result column="information" property="information" jdbcType="VARCHAR" />
+			<result column="seqNum" property="seqNum" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 以下代码是查询列表，即list使用 -->
+	<resultMap type="meetUser" id="resultListUsers">
+		<id property="id" column="id" />
+		<result property="user_id" column="user_id" />
+		<result property="meet_id" column="meet_id" />
+		<collection property="user" javaType="java.util.Set" resultMap="resultUser"/>  
+	</resultMap>
+
+
+
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="getUsersBymeetId" parameterType="int" resultMap="resultListUsers"> 
+		select * from meetuser,users where meet_id = #{meetId} and meetuser.user_id = users.userId
+  	</select> 
+	
+	<!-- 添加数据 -->
+	<!-- 首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server）， 那么你可以设置 useGeneratedKeys=”true”，然后再把 
+		keyProperty 设置到目标属性上就OK了。 -->
+	<!-- <insert id="addMeets" parameterType="Meets" useGeneratedKeys="true" keyProperty="meetId">
+		insert into meets(meetTitle,meetManager,meetPosition,meetType,meetProTime,meetTime,meetStartTime,meetEndTime,meetInfo,room_id,applyUser)
+		values(#{meetTitle},#{meetManager},#{meetPosition},#{meetType},#{meetProTime},#{meetTime},#{meetStartTime},#{meetEndTime},#{meetInfo},#{room_id},#{applyUser})
+	</insert>
+	 -->
+	<!-- 删除数据 -->
+	<delete id="deleteUser" parameterType="int">
+		delete from meetuser where meet_id=#{meet_id} and user_id=#{user_id}
+	</delete>
+
+    
+</mapper>
+

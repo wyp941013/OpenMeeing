@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.MeetingService">
+
+	<!-- 以下代码是查询列表，即list使用 -->
+	<resultMap type="Rooms" id="resultListMeets">
+		<id property="roomId" column="roomId" />
+		<result property="roomNumber" column="roomNumber" />
+		<result property="openTime" column="openTime" />
+		<result property="closeTime" column="closeTime" />
+		<result property="isEmpty" column="isEmpty" />
+		<result property="isOpen" column="isOpen" />
+		<result property="roomManager" column="roomManager" />
+	</resultMap>
+
+	<resultMap type="Meets" id="resultMeet">
+			<id column="meetId" property="meetId" jdbcType="BIGINT" />
+			<result column="meetTitle" property="meetTitle" jdbcType="VARCHAR" />
+			<result column="meetManager" property="meetManager" jdbcType="VARCHAR" />
+			<result column="meetPosition" property="meetPosition" jdbcType="VARCHAR" />
+			<result column="meetType" property="meetType" jdbcType="VARCHAR" />
+			<result column="meetProTime" property="meetProTime" jdbcType="TIMESTAMP" />
+			<result column="meetTime" property="meetTime" jdbcType="DATE" />
+			<result column="meetStartTime" property="meetStartTime" jdbcType="TIME"/>
+			<result column="meetEndTime" property="meetEndTime" jdbcType="TIME"/>
+			<result column="usersNum" property="usersNum" jdbcType="SMALLINT" />
+			<result column="meetInfo" property="meetInfo" jdbcType="VARCHAR" />
+			<result column="room_id" property="room_id" jdbcType="BIGINT" />
+			<result column="applyUser" property="applyUser" jdbcType="VARCHAR" />
+			<collection property="room" javaType="java.util.Set" resultMap="resultListMeets"/>  
+	</resultMap>
+
+
+<!-- 
+<resultMap type="Meets" id="resultMeet">
+			<id column="meetId" property="meetId" jdbcType="BIGINT" />
+			<result column="meetTitle" property="meetTitle" jdbcType="VARCHAR" />
+			<result column="meetManager" property="meetManager" jdbcType="VARCHAR" />
+			<result column="meetPosition" property="meetPosition" jdbcType="VARCHAR" />
+			<result column="meetType" property="meetType" jdbcType="VARCHAR" />
+			<result column="meetProTime" property="meetProTime" jdbcType="TIMESTAMP" />
+			<result column="meetTime" property="meetTime" jdbcType="DATE" />
+			<result column="meetStartTime" property="meetStartTime" jdbcType="TIME"/>
+			<result column="meetEndTime" property="meetEndTime" jdbcType="TIME"/>
+			<result column="usersNum" property="usersNum" jdbcType="SMALLINT" />
+			<result column="meetInfo" property="meetInfo" jdbcType="VARCHAR" />
+			<result column="room_id" property="room_id" jdbcType="BIGINT" />
+			<result column="applyUser" property="applyUser" jdbcType="VARCHAR" />
+			<collection property="meet" javaType="java.util.Set" resultMap="resultMeet"/>  
+	</resultMap>
+
+	<resultMap type="Rooms" id="resultListMeets">
+		<id property="roomId" column="roomId" />
+		<result property="roomNumber" column="roomNumber" />
+		<result property="openTime" column="openTime" />
+		<result property="closeTime" column="closeTime" />
+		<result property="isEmpty" column="isEmpty" />
+		<result property="isOpen" column="isOpen" />
+		<result property="roomManager" column="roomManager" />
+		<collection property="meet" javaType="java.util.Set" resultMap="resultMeet"/>  
+	</resultMap>
+
+
+<resultMap id="articleResultMap" type="Article">
+	<id property="id" column="id" />
+	<result property="title" column="title" />
+	<result property="content" column="content" />
+</resultMap>
+
+<resultMap id="articleResultMap" type="Article">
+	<id property="id" column="id" />
+	<result property="username" column="userName" />
+	<result property="useraddress" column="userAddress" />
+	<collection property="articles" column="ID" javaType="ArrayList" ofType="java.lang.Object" select="select-articles-user" />
+</resultMap>
+
+<select id="getUserArticles" parameterType="int" resultMap="resultUserArticleList">
+	select u.id,u.username,u.useraddress from test_user u where u.id=#{id}
+</select>
+
+<select id="select-articles-user" parameterType="int" resultMap="articleResultMap">
+	select id,title,content from test_article where id = #{ID}
+</select>
+ -->
+
+
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="getUsers" resultType="User"> 
+		select * from users
+  	</select> 
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="getMeetInfoById" parameterType="int" resultMap="resultMeet"> 
+		select * from meets where meetId = #{meetId}
+  	</select> 
+
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="selectMeetInfos" resultMap="resultMeet"> 
+		select * from meets where meetTime = #{meetTime} and room_id = #{room_id} order by meetId desc
+  	</select>
+  	
+	<!-- 返回参数调用上方的返回设置 -->
+	<select id="findMeetsByType" resultMap="resultMeet"> 
+		select Meets.meetId,Meets.meetTitle,Meets.meetManager,
+		Meets.meetPosition,Meets.meetType,Meets.meetProTime,Meets.applyUser,
+		Meets.meetTime,Meets.meetStartTime,Meets.meetEndTime,Meets.usersNum,
+		Meets.meetInfo,Meets.room_id,Rooms.roomId,Rooms.roomNumber from meets
+		left join Rooms on Meets.room_id=Rooms.roomId where applyUser = #{applyUser} and meetType = #{meetType} order by meetId desc
+  	</select>
+   
+	<!-- 分页查询测试 -->
+	<select id="selectListPageMeets" resultMap="resultMeet">
+		select Meets.meetId,Meets.meetTitle,Meets.meetManager,
+		Meets.meetPosition,Meets.meetType,Meets.meetProTime,Meets.applyUser,
+		Meets.meetTime,Meets.meetStartTime,Meets.meetEndTime,Meets.usersNum,
+		Meets.meetInfo,Meets.room_id,Rooms.roomId,Rooms.roomNumber
+		from Meets left join Rooms on Meets.room_id=Rooms.roomId where Meets.applyUser = #{applyUser}
+		 order by meetId desc
+	</select>
+	
+	
+	
+	<!-- 根据登录的用户id在meetuser表中查找所有相关的会议，并显示会议信息 -->
+	<select id="getAllMeetsById" parameterType="int"  resultMap="resultMeet">
+	select * from meets where meetId in (
+	select meet_id from meetuser where user_id =#{userId}
+	) order by meetId desc
+	</select>
+	
+	<!-- 根据会议申请人昵称获取分页信息 -->
+	<select id="selectListPageMeetsByApplyUser" parameterType="String"  resultMap="resultMeet">
+	select Meets.meetId,Meets.meetTitle,Meets.meetManager,
+		Meets.meetPosition,Meets.meetType,Meets.meetProTime,Meets.applyUser,
+		Meets.meetTime,Meets.meetStartTime,Meets.meetEndTime,Meets.usersNum,
+		Meets.meetInfo,Meets.room_id
+		from meets where Meets.applyUser = #{applyUser} order by meetId desc
+	</select>
+	
+	
+	<!-- 根据会议申请人昵称获取分页信息 -->
+	<select id="selectlistMeetsForCompare" parameterType="String"  resultMap="resultMeet">
+	select Meets.meetId,Meets.meetTitle,Meets.meetManager,
+		Meets.meetPosition,Meets.meetType,Meets.meetProTime,Meets.applyUser,
+		Meets.meetTime,Meets.meetStartTime,Meets.meetEndTime,Meets.usersNum,
+		Meets.meetInfo,Meets.room_id
+		from meets where Meets.applyUser = #{applyUser} order by Meets.meetTime desc 
+	</select>
+
+	<!-- 添加数据 -->
+	<!-- 首先，如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server）， 那么你可以设置 useGeneratedKeys=”true”，然后再把 
+		keyProperty 设置到目标属性上就OK了。 -->
+	<insert id="addMeets" parameterType="Meets" useGeneratedKeys="true" keyProperty="meetId">
+		insert into meets(meetTitle,meetManager,meetPosition,meetType,meetProTime,meetTime,meetStartTime,meetEndTime,meetInfo,room_id,applyUser)
+		values(#{meetTitle},#{meetManager},#{meetPosition},#{meetType},#{meetProTime},#{meetTime},#{meetStartTime},#{meetEndTime},#{meetInfo},#{room_id},#{applyUser})
+	</insert>
+	
+	<!-- 为会议添加参会人员 -->
+	<insert id="addmeetUsers" parameterType="com.wyp.mybatis.model.meetUser">
+		insert into meetuser(user_id,meet_id) values(#{user_id},#{meet_id})
+	</insert>
+	
+	<!-- 更新数据 -->
+	<update id="updateMeets" parameterType="Meets">
+		update Meets set
+		meetTitle=#{meetTitle},meetManager=#{meetManager},meetPosition=#{meetPosition},
+		meetType=#{meetType},meetProTime=#{meetProTime},meetTime=#{meetTime},meetStartTime=#{meetStartTime},
+		meetEndTime=#{meetEndTime},room_id=#{room_id},usersNum=#{usersNum},meetInfo=#{meetInfo}
+		where meetId=#{meetId}
+	</update>
+
+	<!-- 删除数据 -->
+	<delete id="deleteMeets" parameterType="int">
+		delete from Meets where meetId=#{meetId}
+	</delete>
+
+    
+</mapper>
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wyp.mybatis.inter.FileService">
+	<resultMap type="FileUploadBean"
+		id="FileUploadBean_resultMap">
+		<id property="fileId" column="fileId" javaType="int" jdbcType="BIGINT" />
+		<result property="upFileByte" column="upFileByte" javaType="byte[]"
+			jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result property="fileName" column="fileName" javaType="String"
+			jdbcType="VARCHAR" />
+		<result property="meet_id" column="meet_id" javaType="int"
+			jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="createFile" parameterType="com.wyp.mybatis.model.FileUploadBean">
+		insert into file(fileId,upFileByte,fileName,meet_id)
+		values(#{fileId, jdbcType=BIGINT},
+		#{upFileByte, javaType=byte[], jdbcType=BLOB,
+		typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+		#{fileName, jdbcType=VARCHAR},
+		#{meet_id, jdbcType=BIGINT})
+	</insert>
+
+	<delete id="deleteFileByFileId">
+		delete from file
+		where fileId = #{fileId, jdbcType=BIGINT}
+	</delete>
+
+	<update id="updateFileData">
+		update file
+		set upFileByte = #{upFileByte, javaType=byte[], jdbcType=BLOB,
+		typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+		fileName = #{fileName, jdbcType=VARCHAR}
+		where fileId = #{fileId, jdbcType=BIGINT}
+	</update>
+
+	<select id="getFileByFileId" resultMap="FileUploadBean_resultMap">
+		select fileId,upFileByte,fileName,meet_id from file
+		where fileId = #{fileId, jdbcType=BIGINT}
+	</select>
+	
+	<select id="getAllFilesByMeetId" resultMap="FileUploadBean_resultMap">
+		select fileId,upFileByte,fileName,meet_id from file
+		where meet_id = #{meet_id, jdbcType=BIGINT}
+	</select>
+</mapper>  

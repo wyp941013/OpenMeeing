@@ -1,0 +1,23 @@
+*{
+margin:0;
+padding:0;	
+}
+
+.div_table{
+margin:10% auto;
+padding:0;
+min-width:255px;
+width:60%;	
+margin-top:10%;
+}
+
+table{
+table-layout:fixed;	
+}
+
+td{
+text-align:center;
+white-space:nowrap;
+overflow:hidden;
+word-break:keep-all;	
+}
